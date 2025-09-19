@@ -27,7 +27,7 @@ jobs:
             7.0.x
 
       - name: Install dependencies
-        run: dotnet restore --framework ${{ matrix.framework }}
+        run: dotnet restore
 
       - name: Build
         run: dotnet build --configuration Release --no-restore --framework ${{ matrix.framework }}
