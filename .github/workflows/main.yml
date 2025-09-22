@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    if: ${{ !contains(toJSON(github.event.commits.*.message), '[skip-ci]') }}
     name: Test on .NET ${{ matrix.dotnet-version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
