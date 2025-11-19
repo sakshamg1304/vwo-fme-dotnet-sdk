@@ -30,13 +30,12 @@ using VWOFmeSdk.Models.User;
 using VWOFmeSdk.Packages.NetworkLayer.Models;
 using VWOFmeSdk.Packages.Logger.Enums;
 using VWOFmeSdk.Services;
-using Newtonsoft.Json;
 using ConstantsNamespace = VWOFmeSdk.Constants;
 using VWOFmeSdk.Packages.NetworkLayer.Manager;
 using VWOFmeSdk.Services;
 using VWOFmeSdk.Utils;
-using Newtonsoft.Json;
 using VWOFmeSdk.Interfaces.Batching;
+using Newtonsoft.Json;
 
 namespace VWOFmeSdk.Utils
 {
@@ -310,11 +309,15 @@ namespace VWOFmeSdk.Utils
         /// <param name="attributeKey"></param>
         /// <param name="attributeValue"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> GetAttributePayloadData(Settings settings, string userId, string eventName, string attributeKey, object attributeValue)
+        public static Dictionary<string, object> GetAttributePayloadData(Settings settings, string userId, string eventName, Dictionary<string, dynamic> attributes)
         {
             var properties = GetEventBasePayload(settings, userId, eventName, null, null);
             properties.D.Event.Props.IsCustomEvent = true;
-            properties.D.Visitor.Props[attributeKey] = attributeValue;
+
+            foreach (var attribute in attributes)
+            {
+                properties.D.Visitor.Props[attribute.Key] = attribute.Value;
+            }
 
             LoggerService.Log(LogLevelEnum.DEBUG, "IMPRESSION_FOR_SYNC_VISITOR_PROP", new Dictionary<string, string>
             {
@@ -328,7 +331,7 @@ namespace VWOFmeSdk.Utils
         }
 
         /// <summary>
-        /// Send the post request to the VWO server
+        /// Send the post request to the VWO server using enhanced queue system
         /// </summary>
         /// <param name="properties"></param>
         /// <param name="payload"></param>
@@ -354,7 +357,7 @@ namespace VWOFmeSdk.Utils
         }
 
         /// <summary>
-        /// Sends a batch POST request to the VWO server with the specified payload and account details.
+        /// Sends a batch POST request to the VWO server with the specified payload and account details using enhanced queue system.
         /// </summary>
         /// <param name="payload">The payload data to be sent in the request body. This can include event-related information.</param>
         /// <param name="accountId">The account ID to associate with the request, used as a query parameter.</param>
@@ -393,7 +396,7 @@ namespace VWOFmeSdk.Utils
                     SettingsManager.GetInstance().Port
                 );
 
-                // Send the request using the Post method
+                // Send the request using the enhanced Post method with queue system
                 var response = NetworkManager.GetInstance().Post(requestModel, flushCallback);
                 return response?.GetStatusCode() == 200;
             }
@@ -560,7 +563,7 @@ namespace VWOFmeSdk.Utils
         }
 
         /// <summary>
-        /// Sends an event to the VWO server
+        /// Sends an event to the VWO server using enhanced queue system
         /// </summary>
         /// <param name="properties"></param>
         /// <param name="payload"></param>
@@ -568,7 +571,7 @@ namespace VWOFmeSdk.Utils
         /// <returns></returns>
         public static object SendEvent(Dictionary<string, string> properties, Dictionary<string, object> payload, string eventName)
         {
-            NetworkManager.GetInstance().AttachClient();
+            NetworkManager.GetInstance().AttachClient(); // Use enhanced concurrent connections
             var baseUrl = UrlService.GetBaseUrl();
             var port = SettingsManager.GetInstance().Port;
             var protocol = SettingsManager.GetInstance().Protocol;
