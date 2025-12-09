@@ -28,7 +28,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        run: dotnet test VWOFmeSdk.Tests/VWOFmeSdk.Tests.csproj --no-restore --collect="XPlat Code Coverage" --verbosity normal
+        run: dotnet test VWOFmeSdk.Tests/VWOFmeSdk.Tests.csproj --collect="XPlat Code Coverage" --verbosity normal
 
       - name: Notification
         if: always()
