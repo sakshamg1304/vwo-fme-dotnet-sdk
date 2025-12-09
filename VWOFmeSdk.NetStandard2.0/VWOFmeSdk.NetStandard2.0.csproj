@@ -14,7 +14,8 @@
     <Description>VWO Feature Management and Experimentation SDK for .Net</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1587;0105;0108;0168;0472;4014;1998;0414;SYSLIB0014</NoWarn>
     <IsPackable>true</IsPackable>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/wingify/vwo-fme-dotnet-sdk/</RepositoryUrl>
@@ -199,3 +200,4 @@
 </ItemGroup>
 
 </Project>
+
